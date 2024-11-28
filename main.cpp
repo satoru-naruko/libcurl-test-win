@@ -1,10 +1,26 @@
-#include "HttpHandler.h"
 #include "CommandProcessor.h" // Include the header file for CommandProcessor
 #include <iostream>
 #include <string>
 #include <Windows.h>
 
+// Control-C Handler
+BOOL WINAPI CtrlHandler(DWORD fdwCtrlType) {
+    switch (fdwCtrlType) {
+    case CTRL_C_EVENT:
+        std::cout << "Control-C pressed, but ignored." << std::endl;
+        return TRUE;
+    default:
+        return FALSE;
+    }
+}
+
 int main() {
+
+    if (!SetConsoleCtrlHandler(CtrlHandler, TRUE)) {
+        std::cerr << "Error: Could not set control handler." << std::endl;
+        return -1;
+    }
+
     CommandProcessor commandProcessor;
     commandProcessor.start();
 
