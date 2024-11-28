@@ -24,6 +24,7 @@ private:
     bool stopProgram;
     std::thread workerThread;
     std::thread timerThread;
+    HttpHandler httpHandler;
 };
 
 #endif // COMMANDPROCESSOR_H

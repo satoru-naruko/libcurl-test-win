@@ -36,6 +36,9 @@ int main() {
         else if (input == "getstatus") {
             commandProcessor.addCommand(input);
         }
+        else if (input == "register") {
+            commandProcessor.addCommand(input);
+        }
 		else if (input.empty()) {
 			continue;
 		}
