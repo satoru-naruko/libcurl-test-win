@@ -3,6 +3,8 @@
 #include <chrono>
 #include <thread>
 
+#include "json/json.h"
+
 CommandProcessor::CommandProcessor() : stopProgram(false) {}
 
 void CommandProcessor::start() {
@@ -30,7 +32,6 @@ void CommandProcessor::addCommand(const std::string& command) {
 }
 
 void CommandProcessor::processCommands() {
-    HttpHandler httpHandler;
     while (!stopProgram) {
         {
             std::unique_lock<std::mutex> lock(queueMutex);
@@ -43,7 +44,19 @@ void CommandProcessor::processCommands() {
             std::string command = commandQueue.front();
             commandQueue.pop();
 
-            httpHandler.performRequest(command);
+            if (command == "getstatus") {
+                httpHandler.performGetRequest("https://jsonplaceholder.typicode.com/posts/1");
+            } else if (command == "register") {
+
+                Json::Value jsonData;
+                jsonData["name"] = "John Doe";
+                jsonData["age"] = 30;
+                jsonData["job"] = "Developer";
+
+                Json::StreamWriterBuilder writer;
+                std::string postData = Json::writeString(writer, jsonData);
+                httpHandler.performPostRequest("https://jsonplaceholder.typicode.com/posts/", postData);
+            }
         }
     }
 }
